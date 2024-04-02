@@ -1,6 +1,7 @@
 package com.alibaba.otter.canal.admin.config;
 
 import java.io.PrintWriter;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,7 +58,11 @@ public class WebConfig implements WebMvcConfigurer {
                 String token = httpServletRequest.getHeader("X-Token");
                 boolean valid = false;
                 if (token != null) {
-                    User user = UserController.loginUsers.getIfPresent(token);
+                    User user = Optional
+                            .ofNullable(UserController.loginUsers
+                                    .getIfPresent(token))
+                            .orElseGet(() -> UserController.apiKeyUsers
+                                    .getIfPresent(token));
                     if (user != null) {
                         valid = true;
                         httpServletRequest.setAttribute("user", user);
