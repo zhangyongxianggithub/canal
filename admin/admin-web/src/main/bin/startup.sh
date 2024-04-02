@@ -32,10 +32,10 @@ if [ -z "$JAVA" ]; then
     exit 1
 fi
 
-JAVA_OPTS="$JAVA_OPTS -Xss128m -XX:+AggressiveOpts -XX:-UseBiasedLocking -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$base/logs"
-JAVA_OPTS="$JAVA_OPTS -XX:+UseFastAccessorMethods -XX:+PrintAdaptiveSizePolicy -XX:+PrintTenuringDistribution"
-JAVA_OPTS="-server -Xms2g -Xmx8g -Xmn1g -XX:SurvivorRatio=2 -XX:PermSize=96m -XX:MaxPermSize=256m -XX:MaxTenuringThreshold=15 -XX:+DisableExplicitGC $JAVA_OPTS"
-JAVA_OPTS=" $JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
+JAVA_OPTS="$JAVA_OPTS -XX:+AggressiveOpts -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$base/logs"
+JAVA_OPTS="$JAVA_OPTS -XX:+PrintAdaptiveSizePolicy -XX:+PrintTenuringDistribution"
+JAVA_OPTS="-server -Xms4g -Xmx18g -XX:+UseG1GC $JAVA_OPTS"
+JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
 CANAL_OPTS="-DappName=canal-admin"
 
 for i in $base/lib/*;
